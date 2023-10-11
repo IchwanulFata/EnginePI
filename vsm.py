@@ -1,5 +1,10 @@
 import math
 from collections import Counter
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+
+# Inisialisasi stemmer dari Sastrawi
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
 
 # Fungsi untuk membaca inverted index dari file
 def read_inverted_index(file_path):
@@ -20,22 +25,24 @@ def calculate_vsm_score(query_terms, doc_id, inverted_index, doc_lengths):
                 if doc_freq == doc_id:
                     idf = math.log(len(doc_lengths) / len(inverted_index[term]))
                     score += (freq * idf)
-                    # print (score, freq, idf, term, doc_freq)
-                    # # print(doc_freq,freq)
     return score
 
 def search(query, inverted_index, doc_lengths):
-    query_terms = query.split()
+    # Melakukan stemming pada kata-kata dalam query dengan Sastrawi
+    query_terms = [stemmer.stem(word) for word in query.split()]
     scores = {}
     
     # Mengubah iterasi menjadi 100 dokumen (doc_id dari 0 hingga 99)
     for doc_id in range(102):
         if doc_id in doc_lengths:
-            scores[doc_id] = calculate_vsm_score(query_terms, doc_id, inverted_index, doc_lengths)
+            score = calculate_vsm_score(query_terms, doc_id, inverted_index, doc_lengths)
+            if score != 0:
+                scores[doc_id] = score
     
+    # Sort dokumen berdasarkan skor
     ranked_docs = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     
-    if ranked_docs[0][1] == 0:
+    if not ranked_docs:
         return "Tidak ada dokumen yang cocok"
     
     results = []
@@ -45,7 +52,7 @@ def search(query, inverted_index, doc_lengths):
     return results
 
 # Membaca inverted index dari file
-inverted_index = read_inverted_index('inverted_index.txt')
+inverted_index = read_inverted_index('./Hasil_index/inverted_index.txt')
 # Anda perlu memiliki data panjang dokumen untuk perhitungan VSM
 # Di sini, kita hanya mengasumsikan panjang dokumen rata-rata
 avg_doc_length = 500

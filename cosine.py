@@ -1,5 +1,10 @@
 import math
 from collections import Counter
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+
+# Inisialisasi stemmer dari Sastrawi
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
 
 # Fungsi untuk membaca inverted index dari file
 def read_inverted_index(file_path):
@@ -15,6 +20,10 @@ def read_inverted_index(file_path):
 def calculate_cosine_similarity(query_terms, doc_id, inverted_index):
     doc_vector = Counter()
     query_vector = Counter(query_terms)
+    
+    # Melakukan stemming pada kata-kata dalam query dengan Sastrawi
+    stemmed_query = stemmer.stem(' '.join(query_terms))
+    query_terms = stemmed_query.split()
     
     for term in query_terms:
         if term in inverted_index:
@@ -36,14 +45,21 @@ def search(query, inverted_index, doc_lengths):
     query_terms = query.split()
     scores = {}
     
+    # Melakukan stemming pada kata-kata dalam query dengan Sastrawi
+    stemmed_query = stemmer.stem(' '.join(query_terms))
+    query_terms = stemmed_query.split()
+    
     # Mengubah iterasi menjadi 100 dokumen (doc_id dari 0 hingga 99)
     for doc_id in range(102):
         if doc_id in doc_lengths:
-            scores[doc_id] = calculate_cosine_similarity(query_terms, doc_id, inverted_index)
+            score = calculate_cosine_similarity(query_terms, doc_id, inverted_index)
+            if score != 0:
+                scores[doc_id] = score
     
+    # Sort dokumen berdasarkan skor
     ranked_docs = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     
-    if ranked_docs[0][1] == 0:
+    if not ranked_docs:
         return "Tidak ada dokumen yang cocok"
     
     results = []
@@ -52,8 +68,9 @@ def search(query, inverted_index, doc_lengths):
     
     return results
 
+
 # Membaca inverted index dari file
-inverted_index = read_inverted_index('inverted_index.txt')
+inverted_index = read_inverted_index('./Hasil_index/inverted_index.txt')
 # Anda perlu memiliki data panjang dokumen untuk perhitungan VSM
 # Di sini, kita hanya mengasumsikan panjang dokumen rata-rata
 avg_doc_length = 500
