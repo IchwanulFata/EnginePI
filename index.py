@@ -1,5 +1,6 @@
 import os
 import re
+from collections import Counter
 
 # Fungsi untuk membersihkan dan tokenisasi teks
 def clean_and_tokenize(text):
@@ -16,18 +17,17 @@ def build_inverted_index(file_path, doc_id):
     # Membersihkan dan tokenisasi teks
     tokens = clean_and_tokenize(text)
     
+    # Menghitung frekuensi term dalam dokumen
+    term_frequency = Counter(tokens)
+    
     # Membuat inverted index
     index = {}
-    for i, token in enumerate(tokens):
-        if token not in index:
-            index[token] = []
-        index[token].append((doc_id, i))
+    for term, freq in term_frequency.items():
+        if term not in index:
+            index[term] = []
+        index[term].append((doc_id, freq))
     
     return index
-
-# Membuat folder untuk menyimpan indeks
-index_folder = 'Hasil_index'
-os.makedirs(index_folder, exist_ok=True)
 
 # Memproses setiap file dalam output_folder
 output_folder = 'HASIL'
@@ -50,9 +50,9 @@ for doc_id, output_file in enumerate(output_files):
             inverted_index[term].extend(positions)
 
 # Menyimpan inverted index ke dalam berkas
-index_file_path = os.path.join(index_folder, 'inverted_index.txt')
+index_file_path = os.path.join('inverted_index.txt')
 with open(index_file_path, 'w', encoding='utf-8') as index_file:
-    for term, positions in inverted_index.items():
-        index_file.write(f"{term}: {', '.join(map(str, positions))}\n")
+    for term, doc_freq_pairs in inverted_index.items():
+        index_file.write(f"{term}: {', '.join([f'({doc_id},{freq})' for doc_id, freq in doc_freq_pairs])}\n")
 
 print(f"Inverted index telah disimpan ke dalam '{index_file_path}'.")

@@ -4,7 +4,7 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 
 # Tentukan direktori tempat file-file berada
-input_directory = "D:/Skill/EnginePI/document_nwe"
+input_directory = "D:/Skill/EnginePI/Document"
 
 # Buat direktori baru untuk menyimpan file hasil di folder "HASIL"
 output_directory = "D:/Skill/EnginePI/HASIL"
@@ -46,8 +46,9 @@ for file_name in file_list:
         # Tokenisasi teks yang sudah dibersihkan
         tokens = text.split()
 
-        # Stemming teks dan menghapus duplikat token
-        stemmed_tokens = list(set([stemmer.stem(token) for token in tokens]))
+        # Stemming teks tanpa menghapus duplikat token
+        stemmed_tokens = [stemmer.stem(token) for token in tokens]
+
         # Hapus stopwords sekali lagi, jika ada yang tersisa
         stopwords = ["yang", "untuk", "pada", "ke", "para", "namun", "antara", "dia", "dua", "ia", "seperti", "jika", "sehingga", "kembali", "dan", "ini", "kepada", "saat", "harus", "sementara", "belum", "kami", "sekitar", "bagi", "serta", "di", "dari", "telah", "sebagai", "masih", "hal", "adalah", "itu", "dalam", "bisa", "bahwa", "atau", "hanya", "kita", "dengan", "akan", "juga", "ada", "mereka", "sudah", "saya", "terhadap", "agar", "lain", "anda", "begitu", "mengapa", "kenapa", "yaitu", "yakni", "daripada", "itulah", "lagi", "maka", "tentang", "demi", "dimana", "kemana", "pula", "sambil", "supaya", "guna", "kah", "pun", "sedangkan", "selagi", "sementara", "tetapi", "apakah", "kecuali", "selain", "seolah", "seraya", "seterusnya", "tanpa", "agak", "boleh", "dapat", "dsb", "dst", "dll", "dahulu", "dulunya", "anu", "demikian", "tapi", "ingin", "juga", "nggak", "mari", "nanti", "melainkan", "oh", "ok", "seharusnya", "sebetulnya", "setidaknya", "sesuatu", "pasti", "saja", "toh", "ya", "walau", "tolong", "tentu", "amat", "apalagi","bagaimanapun"]
         filtered_stemmed_tokens = [token for token in stemmed_tokens if token not in stopwords]
