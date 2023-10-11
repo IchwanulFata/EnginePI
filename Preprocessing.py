@@ -4,10 +4,10 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 
 # Tentukan direktori tempat file-file berada
-input_directory = "C:/Users/LENOVO/Documents/Semester 5/PI/Projek/EnginePI/Document"
+input_directory = "D:/Skill/EnginePI/document_nwe"
 
 # Buat direktori baru untuk menyimpan file hasil di folder "HASIL"
-output_directory = "C:/Users/LENOVO/Documents/Semester 5/PI/Projek/EnginePI/HASIL"
+output_directory = "D:/Skill/EnginePI/HASIL"
 
 # Buat daftar file-file di direktori input
 file_list = os.listdir(input_directory)
