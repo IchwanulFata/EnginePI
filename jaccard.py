@@ -1,3 +1,11 @@
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+import math
+from collections import Counter
+
+# Inisialisasi stemmer dari Sastrawi
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
+
 # Fungsi untuk membaca inverted index dari file
 def read_inverted_index(file_path):
     inverted_index = {}
@@ -27,16 +35,22 @@ def calculate_jaccard_similarity(query_terms, doc_id, inverted_index):
     return similarity
 
 def search(query, inverted_index):
-    query_terms = query.split()
+    # Melakukan stemming pada kata-kata dalam query dengan Sastrawi
+    stemmed_query = stemmer.stem(query)
+    query_terms = set(stemmed_query.split())
+    
     scores = {}
     
     # Mengubah iterasi menjadi 100 dokumen (doc_id dari 0 hingga 99)
     for doc_id in range(102):
-        scores[doc_id] = calculate_jaccard_similarity(query_terms, doc_id, inverted_index)
+        score = calculate_jaccard_similarity(query_terms, doc_id, inverted_index)
+        if score != 0:
+            scores[doc_id] = score
     
+    # Sort dokumen berdasarkan skor
     ranked_docs = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     
-    if ranked_docs[0][1] == 0:
+    if not ranked_docs:
         return "Tidak ada dokumen yang cocok"
     
     results = []
@@ -46,7 +60,7 @@ def search(query, inverted_index):
     return results
 
 # Membaca inverted index dari file
-inverted_index = read_inverted_index('inverted_index.txt')
+inverted_index = read_inverted_index('./Hasil_index/inverted_index.txt')
 
 # Mencari query
 query = input("Masukkan query: ")
