@@ -60,7 +60,7 @@ def search(query, inverted_index):
     return results
 
 # Membaca inverted index dari file
-inverted_index = read_inverted_index('./Hasil_index/inverted_index.txt')
+inverted_index = read_inverted_index('inverted_index.txt')
 
 # Mencari query
 query = input("Masukkan query: ")

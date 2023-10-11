@@ -4,7 +4,7 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 
 # Tentukan direktori tempat file-file berada
-input_directory = "D:/Skill/EnginePI/Document"
+input_directory = "D:/Skill/EnginePI/Numbered Document"
 
 # Buat direktori baru untuk menyimpan file hasil di folder "HASIL"
 output_directory = "D:/Skill/EnginePI/HASIL"
@@ -54,7 +54,7 @@ for file_name in file_list:
         filtered_stemmed_tokens = [token for token in stemmed_tokens if token not in stopwords]
         
         # Menyimpan hasil teks yang sudah dibersihkan, di-tokenisasi, di-stem, dan dihilangkan stopwords ke dalam berkas
-        output_file_name = file_name.replace('.txt', '.stemmed.no_stopwords.txt')
+        output_file_name = file_name
         output_file_path = os.path.join(output_directory, output_file_name)
         with open(output_file_path, 'w', encoding='utf-8') as output_file:
             output_file.write('\n'.join(filtered_stemmed_tokens))

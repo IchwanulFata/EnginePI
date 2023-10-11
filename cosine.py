@@ -70,7 +70,7 @@ def search(query, inverted_index, doc_lengths):
 
 
 # Membaca inverted index dari file
-inverted_index = read_inverted_index('./Hasil_index/inverted_index.txt')
+inverted_index = read_inverted_index('inverted_index.txt')
 # Anda perlu memiliki data panjang dokumen untuk perhitungan VSM
 # Di sini, kita hanya mengasumsikan panjang dokumen rata-rata
 avg_doc_length = 500
